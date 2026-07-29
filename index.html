@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Vexon Pass — the digital passport for your motorcycle</title>
+<meta name="description" content="Vexon Pass turns your upgrades, maintenance, and miles into a verified digital passport that travels with your motorcycle.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,450;9..144,560;9..144,650&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#FBF8F3;
+    --bg-2:#F1EAD9;
+    --card:#FFFFFF;
+    --ink:#211D17;
+    --dim:#726A5C;
+    --dimmer:#9C947F;
+    --line:#E6DDC8;
+    --rust:#B8501E;
+    --rust-soft:rgba(184,80,30,0.08);
+    --green:#3C8F5C;
+    --green-soft:rgba(60,143,92,0.09);
+  }
+
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'Inter', sans-serif;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{
+    font-family:'Fraunces', serif;
+    font-weight:560;
+    letter-spacing:-0.01em;
+    margin:0;
+  }
+  p{margin:0;line-height:1.7;}
+  a{color:inherit;text-decoration:none;}
+  img,svg{display:block;max-width:100%;}
+
+  .wrap{max-width:1120px;margin:0 auto;padding:0 28px;}
+  .wrap-narrow{max-width:760px;margin:0 auto;padding:0 28px;}
+
+  .eyebrow{
+    font-size:12.5px;
+    letter-spacing:0.16em;
+    text-transform:uppercase;
+    color:var(--rust);
+    font-weight:600;
+  }
+
+  /* ---------- NAV ---------- */
+  .topbar{
+    position:sticky;top:0;z-index:30;
+    background:rgba(251,248,243,0.9);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  .topbar .wrap{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:14px 28px;
+  }
+  .topbar img{height:30px;width:auto;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;
+    font-family:'Inter', sans-serif;font-weight:600;font-size:14px;
+    padding:12px 22px;border-radius:100px;border:0;cursor:pointer;
+    white-space:nowrap;
+    transition:background .15s ease, transform .15s ease, box-shadow .15s ease;
+  }
+  .btn-primary{background:var(--rust);color:#FFF8EF;}
+  .btn-primary:hover{background:#A0430F;}
+  .btn-outline{
+    background:transparent;border:1.5px solid var(--ink);color:var(--ink);
+    font-size:13.5px;padding:10px 20px;
+  }
+  .btn-outline:hover{background:var(--ink);color:var(--bg);}
+
+  /* ---------- HERO ---------- */
+  .hero{padding:64px 0 0;text-align:center;}
+  .hero .wrap-narrow{display:flex;flex-direction:column;align-items:center;}
+  .hero h1{
+    margin-top:18px;
+    font-size:clamp(38px, 6vw, 66px);
+    line-height:1.05;
+    max-width:14ch;
+  }
+  .hero h1 em{font-style:italic;color:var(--rust);font-weight:450;}
+  .hero-sub{
+    margin-top:22px;
+    font-size:18px;
+    color:var(--dim);
+    max-width:46ch;
+  }
+
+  .signup{
+    margin-top:30px;
+    display:flex;
+    max-width:440px;width:100%;
+    border:1.5px solid var(--ink);
+    border-radius:100px;
+    overflow:hidden;
+    background:var(--card);
+  }
+  .signup input[type="email"]{
+    flex:1;min-width:0;background:transparent;border:0;outline:0;
+    padding:14px 20px;font-family:'Inter', sans-serif;font-size:14.5px;color:var(--ink);
+  }
+  .signup input::placeholder{color:var(--dimmer);}
+  .signup button{
+    border:0;background:var(--rust);color:#FFF8EF;
+    font-family:'Inter', sans-serif;font-weight:600;font-size:14px;
+    padding:0 24px;cursor:pointer;transition:background .15s ease;
+  }
+  .signup button:hover{background:#A0430F;}
+  .hero-note{
+    margin-top:14px;font-size:12.5px;color:var(--dimmer);letter-spacing:0.03em;
+  }
+  .form-status{margin-top:12px;font-size:13px;color:var(--green);display:none;}
+  .form-status.show{display:block;}
+
+  /* ---------- HERO PHOTO ---------- */
+  .hero-photo{
+    margin-top:52px;
+    position:relative;
+    height:64vh;min-height:420px;max-height:680px;
+    overflow:visible;
+  }
+  .hero-photo .photo-clip{
+    width:100%;height:100%;overflow:hidden;
+  }
+  .hero-photo img{
+    width:100%;height:100%;object-fit:cover;object-position:center 40%;
+    transition:transform 10s ease;
+  }
+  .hero-photo:hover img{transform:scale(1.04);}
+
+  /* ---------- FLOATING PHONE MOCKUP ---------- */
+  .phone-float{
+    position:absolute;
+    right:6%;bottom:-54px;
+    width:220px;
+    transform:rotate(-5deg);
+    filter:drop-shadow(0 34px 46px rgba(20,16,8,0.38));
+    z-index:2;
+  }
+  .phone-float .frame{
+    background:#131211;
+    border-radius:30px;
+    padding:9px;
+    border:1px solid #2A2723;
+    aspect-ratio:9/19.5;
+    display:flex;
+  }
+  .phone-float .notch{
+    position:absolute;top:16px;left:50%;transform:translateX(-50%);
+    width:56px;height:16px;background:#131211;border-radius:10px;z-index:3;
+  }
+  .phone-float .screen{
+    background:var(--bg);
+    border-radius:22px;
+    overflow:hidden;
+    position:relative;
+    flex:1;
+    display:flex;
+    flex-direction:column;
+  }
+  .phone-float .pf-status{
+    display:flex;justify-content:space-between;
+    padding:14px 16px 2px;
+    font-size:10px;font-weight:600;color:var(--ink);
+  }
+  .phone-float .pf-header{
+    padding:10px 14px 8px;
+    display:flex;align-items:center;justify-content:space-between;
+  }
+  .phone-float .pf-header .t{font-family:'Fraunces', serif;font-weight:600;font-size:14px;color:var(--ink);}
+  .phone-float .pf-header .a{width:20px;height:20px;border-radius:50%;background:linear-gradient(135deg, var(--rust), var(--green));}
+  .phone-float .pf-photo{
+    margin:0 14px;
+    height:132px;
+    border-radius:12px;
+    background-image:url('bike-hero.jpg');
+    background-size:cover;
+    background-position:center 55%;
+    position:relative;
+  }
+  .phone-float .pf-badge{
+    position:absolute;right:-6px;bottom:-10px;
+    background:var(--card);
+    border-radius:10px;
+    padding:5px 9px 5px 5px;
+    display:flex;align-items:center;gap:6px;
+    box-shadow:0 6px 14px -4px rgba(20,16,8,0.35);
+  }
+  .phone-float .pf-badge .ck{
+    width:16px;height:16px;border-radius:50%;background:var(--green);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .phone-float .pf-badge span{font-size:8.5px;font-weight:700;color:var(--ink);}
+  .phone-float .pf-stat{
+    margin:18px 14px 0;
+    background:var(--bg-2);
+    border-radius:10px;
+    padding:10px 12px;
+    display:flex;justify-content:space-between;align-items:center;
+  }
+  .phone-float .pf-stat .l{font-size:8px;letter-spacing:0.05em;text-transform:uppercase;color:var(--dim);}
+  .phone-float .pf-stat .v{margin-top:2px;font-family:'Fraunces', serif;font-weight:600;font-size:17px;color:var(--rust);}
+  .phone-float .pf-log{margin:12px 14px 0;display:flex;flex-direction:column;gap:7px;}
+  .phone-float .pf-row{
+    display:flex;justify-content:space-between;align-items:center;
+    background:var(--bg-2);border-radius:8px;padding:8px 10px;
+  }
+  .phone-float .pf-row .left{display:flex;align-items:center;gap:6px;}
+  .phone-float .pf-row .ok{width:12px;height:12px;border-radius:50%;background:var(--green-soft);display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+  .phone-float .pf-row .ok svg{width:7px;height:7px;}
+  .phone-float .pf-row .name{font-size:9.5px;color:var(--ink);}
+  .phone-float .pf-row .amt{font-size:9px;color:var(--dim);font-weight:600;}
+  .phone-float .pf-tabbar{
+    margin-top:auto;
+    display:flex;justify-content:space-around;align-items:center;
+    padding:12px 14px 8px;
+    border-top:1px solid var(--line);
+  }
+  .phone-float .pf-tabbar .tab{width:18px;height:18px;border-radius:5px;}
+  .phone-float .pf-tabbar .tab.active{background:var(--rust-soft);border:1.5px solid var(--rust);}
+  .phone-float .pf-tabbar .tab.inactive{border:1.5px solid var(--line);}
+  .phone-float .pf-home{
+    width:88px;height:4px;border-radius:4px;background:var(--dimmer);
+    margin:6px auto 10px;opacity:0.5;
+  }
+
+  @media (max-width:820px){
+    .phone-float{width:172px;right:5%;bottom:-40px;}
+  }
+  @media (max-width:640px){
+    .hero-photo{height:50vh;min-height:340px;}
+    .phone-float{position:static;transform:none;width:220px;margin:-30px auto 0;filter:drop-shadow(0 18px 30px rgba(20,16,8,0.3));}
+  }
+
+  /* ---------- SECTION SHARED ---------- */
+  section{padding:96px 0;}
+  .section-head{max-width:600px;margin:0 auto 48px;text-align:center;}
+  .section-head h2{
+    margin-top:12px;font-size:clamp(28px,4vw,42px);line-height:1.1;
+  }
+  .section-head p{margin-top:16px;color:var(--dim);font-size:16px;}
+
+  /* ---------- RIDER TRIBES (editorial list) ---------- */
+  .tribes-list{
+    max-width:840px;margin:0 auto;
+    border-top:1px solid var(--line);
+  }
+  .tribe-row{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:24px;padding:22px 4px;
+    border-bottom:1px solid var(--line);
+  }
+  .tribe-row .tribe-left{display:flex;align-items:center;gap:20px;min-width:0;}
+  .tribe-row .tribe-thumb{
+    width:64px;height:64px;border-radius:12px;object-fit:cover;flex-shrink:0;
+  }
+  .tribe-row .tribe-name{
+    font-size:clamp(20px,2.6vw,26px);white-space:nowrap;
+  }
+  .tribe-row .tribe-desc{
+    color:var(--dim);font-size:14.5px;max-width:34ch;text-align:right;flex-shrink:1;
+  }
+  @media (max-width:620px){
+    .tribe-row{flex-direction:column;align-items:flex-start;gap:12px;}
+    .tribe-row .tribe-desc{text-align:left;}
+  }
+
+  /* ---------- COMPARISON ---------- */
+  .compare-grid{display:grid;grid-template-columns:1fr 1fr;gap:1px;background:var(--line);border:1px solid var(--line);border-radius:20px;overflow:hidden;}
+  .compare-col{background:var(--card);padding:36px 32px;}
+  .compare-col .col-title{
+    font-family:'Fraunces', serif;font-size:20px;font-weight:560;
+  }
+  .compare-col.old .col-title{color:var(--dimmer);}
+  .compare-col.new .col-title{color:var(--green);}
+  .compare-col ul{list-style:none;margin:24px 0 0;padding:0;display:flex;flex-direction:column;gap:16px;}
+  .compare-col li{display:flex;gap:12px;font-size:14.5px;color:var(--dim);align-items:flex-start;}
+  .compare-col.new li{color:var(--ink);}
+  .compare-col li .ico{flex-shrink:0;margin-top:3px;}
+  .compare-col.old .ico{color:#C8BFA8;}
+  .compare-col.new .ico{color:var(--green);}
+  @media (max-width:700px){.compare-grid{grid-template-columns:1fr;}}
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;}
+  .step{border-top:2px solid var(--ink);padding-top:20px;}
+  .step .step-num{font-size:13px;color:var(--rust);font-weight:600;}
+  .step h3{margin-top:10px;font-size:21px;}
+  .step p{margin-top:10px;color:var(--dim);font-size:14.5px;}
+  @media (max-width:760px){.steps{grid-template-columns:1fr;gap:32px;}}
+
+  /* ---------- QUOTE BAND ---------- */
+  .quote-band{background:var(--bg-2);border-top:1px solid var(--line);border-bottom:1px solid var(--line);}
+  .quote-band .wrap-narrow{text-align:center;}
+  .quote-band blockquote{
+    margin:0;font-family:'Fraunces', serif;font-style:italic;font-weight:450;
+    font-size:clamp(24px,3.4vw,36px);line-height:1.3;color:var(--ink);
+  }
+  .quote-band .quote-attr{margin-top:18px;font-size:13px;color:var(--dim);letter-spacing:0.02em;}
+
+  /* ---------- LIFETIME CHAIN ---------- */
+  .chain-hero{position:relative;padding-top:20px;}
+  .handshake-bg{
+    position:absolute;left:50%;top:-6px;transform:translateX(-50%);
+    width:420px;max-width:80%;
+    z-index:0;
+    pointer-events:none;
+  }
+  .chain-hero > *{position:relative;z-index:1;}
+  .chain-visual{
+    margin-top:16px;max-width:620px;margin-left:auto;margin-right:auto;
+    display:flex;align-items:center;justify-content:space-between;position:relative;padding:20px 0;
+  }
+  .chain-line{position:absolute;left:24px;right:24px;top:44px;height:1px;background:var(--line);}
+  .chain-node{position:relative;z-index:1;display:flex;flex-direction:column;align-items:center;gap:10px;}
+  .chain-node .circle{
+    width:48px;height:48px;border-radius:50%;background:var(--card);
+    border:1.5px solid var(--line);display:flex;align-items:center;justify-content:center;
+    font-family:'Fraunces', serif;font-weight:600;font-size:16px;
+  }
+  .chain-node:last-child .circle{border-color:var(--green);color:var(--green);}
+  .chain-node .lbl{font-size:11px;color:var(--dim);text-align:center;letter-spacing:0.03em;}
+
+  /* ---------- SECOND PHOTO ---------- */
+  .photo-band{position:relative;height:52vh;min-height:340px;max-height:560px;overflow:hidden;}
+  .photo-band img{width:100%;height:100%;object-fit:cover;object-position:center 30%;transition:transform 10s ease;}
+  .photo-band:hover img{transform:scale(1.04);}
+
+  /* ---------- FINAL CTA ---------- */
+  .final{text-align:center;background:var(--bg-2);border-top:1px solid var(--line);}
+  .final h2{font-size:clamp(30px,4.6vw,46px);}
+  .final p{margin-top:14px;color:var(--dim);font-size:16px;max-width:44ch;margin-left:auto;margin-right:auto;}
+  .final .signup{margin:28px auto 0;}
+  .final .form-status{text-align:center;}
+
+  footer{padding:34px 0;border-top:1px solid var(--line);}
+  footer .wrap{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:12px;}
+  footer img{height:22px;}
+  footer .foot-tag{font-size:12.5px;color:var(--dimmer);}
+
+  /* ---------- REVEAL ---------- */
+  .reveal{opacity:0;transform:translateY(14px);transition:opacity .5s ease, transform .5s ease;}
+  .reveal.in{opacity:1;transform:translateY(0);}
+  @media (prefers-reduced-motion:reduce){
+    .reveal{opacity:1;transform:none;transition:none;}
+    html{scroll-behavior:auto;}
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap">
+    <img src="vexonpass-logo.png" alt="Vexon Pass">
+    <a href="#waitlist" class="btn btn-outline">Join Waitlist</a>
+  </div>
+</div>
+
+<!-- HERO -->
+<section class="hero" style="padding-bottom:0;">
+  <div class="wrap-narrow">
+    <p class="eyebrow">Private. Yours. Passed on your terms.</p>
+    <h1>Every ride. Every build. <em>One story.</em></h1>
+    <p class="hero-sub">Touring, cruising, chasing gravel roads — whatever you ride, Vexon Pass turns your upgrades and your miles into a verified story that travels with the bike. No spreadsheets, no typing — just snap a photo and let AI handle the rest.</p>
+
+    <form class="signup" id="heroForm" action="https://formspree.io/f/mgogqyqw" method="POST">
+      <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address">
+      <input type="hidden" name="_subject" value="New Vexon Pass waitlist signup">
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+      <button type="submit">Join Waitlist</button>
+    </form>
+    <p class="form-status" id="heroStatus"></p>
+    <p class="hero-note">FREE DURING TESTING · NO CREDIT CARD REQUIRED · PRIVATE BY DEFAULT — YOU DECIDE WHO SEES IT</p>
+  </div>
+
+  <div class="hero-photo">
+    <div class="photo-clip">
+      <img src="bike-hero.jpg" alt="Adventure motorcycle with aluminum panniers on a mountain trail">
+    </div>
+
+    <div class="phone-float">
+      <div class="frame">
+        <div class="notch"></div>
+        <div class="screen">
+          <div class="pf-status"><span>9:41</span><span>●●●</span></div>
+          <div class="pf-header"><span class="t">My Garage</span><div class="a"></div></div>
+
+          <div class="pf-photo">
+            <div class="pf-badge">
+              <div class="ck"><svg width="8" height="8" viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="#FBF8F3" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              <span>Verified</span>
+            </div>
+          </div>
+
+          <div class="pf-stat">
+            <div><div class="l">Total Upgrades</div><div class="v">€4,850</div></div>
+          </div>
+
+          <div class="pf-log">
+            <div class="pf-row">
+              <div class="left"><div class="ok"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="#3C8F5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="name">Akrapovič Exhaust</span></div>
+              <span class="amt">€1,200</span>
+            </div>
+            <div class="pf-row">
+              <div class="left"><div class="ok"><svg viewBox="0 0 12 12" fill="none"><path d="M2.5 6.2L4.8 8.5L9.5 3.5" stroke="#3C8F5C" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg></div><span class="name">Full Service</span></div>
+              <span class="amt">€180</span>
+            </div>
+          </div>
+
+          <div class="pf-tabbar">
+            <div class="tab active"></div>
+            <div class="tab inactive"></div>
+            <div class="tab inactive"></div>
+          </div>
+          <div class="pf-home"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- RIDER TRIBES -->
+<section>
+  <div class="wrap reveal">
+    <div class="section-head">
+      <p class="eyebrow">One passport, every kind of rider</p>
+      <h2>Freedom looks different for everyone.</h2>
+    </div>
+    <div class="tribes-list">
+      <div class="tribe-row">
+        <div class="tribe-left">
+          <img class="tribe-thumb" src="sunset-rider.jpg" alt="Rider silhouette at sunset">
+          <span class="tribe-name">Touring</span>
+        </div>
+        <span class="tribe-desc">Long roads, full luggage, miles that add up to a lifetime.</span>
+      </div>
+      <div class="tribe-row">
+        <div class="tribe-left">
+          <img class="tribe-thumb" src="cruiser-detail.jpg" alt="Chrome cruiser motorcycle detail">
+          <span class="tribe-name">Cruiser &amp; Chopper</span>
+        </div>
+        <span class="tribe-desc">Custom builds, chrome, and a whole lot of character.</span>
+      </div>
+      <div class="tribe-row">
+        <div class="tribe-left">
+          <img class="tribe-thumb" src="bike-hero.jpg" alt="Adventure motorcycle on a mountain trail">
+          <span class="tribe-name">Adventure &amp; Dual-Sport</span>
+        </div>
+        <span class="tribe-desc">Gravel, mud, and the road that isn't on the map.</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- COMPARISON -->
+<section>
+  <div class="wrap reveal">
+    <div class="section-head">
+      <p class="eyebrow">The difference</p>
+      <h2>Selling used to mean guessing.<br>Now it's proof.</h2>
+    </div>
+    <div class="compare-grid">
+      <div class="compare-col old">
+        <p class="col-title">Without Vexon Pass</p>
+        <ul>
+          <li><span class="ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3.5 3.5l8 8M11.5 3.5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Receipts scattered, faded, or long gone by the time you sell.</li>
+          <li><span class="ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3.5 3.5l8 8M11.5 3.5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Buyers negotiate down every euro because they can't verify anything.</li>
+          <li><span class="ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M3.5 3.5l8 8M11.5 3.5l-8 8" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg></span>Thousands invested in upgrades, none of it reflected in the price.</li>
+        </ul>
+      </div>
+      <div class="compare-col new">
+        <p class="col-title">With Vexon Pass</p>
+        <ul>
+          <li><span class="ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2.5 7.7L5.6 10.8L12.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Every exhaust, bag, and service backed by a photo and a timestamp.</li>
+          <li><span class="ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2.5 7.7L5.6 10.8L12.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>Buyers see full transparency the moment they open one link.</li>
+          <li><span class="ico"><svg width="15" height="15" viewBox="0 0 15 15" fill="none"><path d="M2.5 7.7L5.6 10.8L12.5 3.5" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg></span>A verified digital portfolio, organized automatically as you go.</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section>
+  <div class="wrap reveal">
+    <div class="section-head">
+      <p class="eyebrow">How it works</p>
+      <h2>Three steps. Zero paperwork.</h2>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <p class="step-num">01</p>
+        <h3>Snap &amp; Log</h3>
+        <p>Photograph any receipt or invoice — AI reads the item, amount, and date for you automatically.</p>
+      </div>
+      <div class="step">
+        <p class="step-num">02</p>
+        <h3>Build Passport</h3>
+        <p>A clean, valuable history builds itself year after year — no spreadsheets, no folders.</p>
+      </div>
+      <div class="step">
+        <p class="step-num">03</p>
+        <h3>Transfer &amp; Deal</h3>
+        <p>Selling the bike? Hand over the full history with a QR code and close the deal over WhatsApp.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUOTE / SECOND PHOTO -->
+<div class="photo-band">
+  <img src="sunset-rider.jpg" alt="Motorcycle rider silhouette at sunset with mountains in the background">
+</div>
+<section class="quote-band">
+  <div class="wrap-narrow reveal">
+    <blockquote>"The best rides are the ones you can prove you took."</blockquote>
+    <p class="quote-attr">— every rider who's ever haggled over a receipt they couldn't find</p>
+  </div>
+</section>
+
+<!-- LIFETIME CHAIN -->
+<section>
+  <div class="wrap-narrow reveal chain-hero" style="text-align:center;">
+    <svg class="handshake-bg" viewBox="0 0 400 160" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+      <path d="M14,148 Q95,150 152,96" stroke="#E6DDC8" stroke-width="26" stroke-linecap="round"/>
+      <path d="M386,148 Q305,150 248,96" stroke="#E6DDC8" stroke-width="26" stroke-linecap="round"/>
+      <circle cx="152" cy="92" r="24" fill="#E6DDC8"/>
+      <circle cx="248" cy="92" r="24" fill="#E6DDC8"/>
+      <path d="M138,80 Q152,68 166,80 M234,80 Q248,68 262,80" stroke="#FBF8F3" stroke-width="4" stroke-linecap="round"/>
+      <rect x="190" y="80" width="20" height="24" rx="6" fill="#FBF8F3"/>
+    </svg>
+    <p class="eyebrow">The real advantage</p>
+    <h2 style="margin-top:12px;font-size:clamp(28px,4vw,42px);">One handover. Zero hassle.</h2>
+    <p style="margin-top:16px;color:var(--dim);font-size:16px;">Paper service books get lost. Vexon Pass travels with the bike — handed from owner to owner with a single link, no paperwork, no back-and-forth. It stays private the whole way: only you can see it, until the day you choose to hand it to the next rider. Owner one, two, and three all continue the same chain, so after 10 years the bike has a spotless, verified history that lifts its market value.</p>
+
+    <div class="chain-visual">
+      <div class="chain-line"></div>
+      <div class="chain-node"><div class="circle">1</div><span class="lbl">OWNER<br>2021</span></div>
+      <div class="chain-node"><div class="circle">2</div><span class="lbl">OWNER<br>2023</span></div>
+      <div class="chain-node"><div class="circle">3</div><span class="lbl">OWNER<br>2025</span></div>
+      <div class="chain-node"><div class="circle">✓</div><span class="lbl">VERIFIED<br>TODAY</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- FINAL CTA -->
+<section class="final" id="waitlist">
+  <div class="wrap-narrow reveal">
+    <p class="eyebrow" style="justify-content:center;">Early access</p>
+    <h2 style="margin-top:14px;">Get early access.</h2>
+    <p>Join the waitlist and be the first to build your bike's verified history — and help shape the product before launch.</p>
+
+    <form class="signup" id="finalForm" action="https://formspree.io/f/mgogqyqw" method="POST">
+      <input type="email" name="email" placeholder="you@email.com" required aria-label="Email address">
+      <input type="hidden" name="_subject" value="New Vexon Pass waitlist signup">
+      <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off">
+      <button type="submit">Get Early Access</button>
+    </form>
+    <p class="form-status" id="finalStatus"></p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <img src="vexonpass-logo.png" alt="Vexon Pass">
+    <p class="foot-tag">The digital motorcycle passport · © 2026</p>
+  </div>
+</footer>
+
+<script>
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window){
+    const io = new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); } });
+    }, {threshold:0.12});
+    revealEls.forEach(el=>io.observe(el));
+  } else {
+    revealEls.forEach(el=>el.classList.add('in'));
+  }
+
+  function wireForm(formId, statusId){
+    const form = document.getElementById(formId);
+    const status = document.getElementById(statusId);
+    if(!form) return;
+    form.addEventListener('submit', async function(e){
+      if(form.action.includes('YOUR_FORM_ID')){
+        e.preventDefault();
+        status.textContent = 'Form isn\'t connected to a backend yet (see comment in the HTML).';
+        status.classList.add('show');
+        return;
+      }
+      e.preventDefault();
+      const data = new FormData(form);
+      try{
+        const res = await fetch(form.action, { method:'POST', body:data, headers:{ 'Accept':'application/json' } });
+        if(res.ok){
+          status.textContent = 'Thanks — you\'re on the list.';
+          status.classList.add('show');
+          form.reset();
+        } else {
+          status.textContent = 'Something went wrong — please try again.';
+          status.classList.add('show');
+        }
+      }catch(err){
+        status.textContent = 'Something went wrong — please try again.';
+        status.classList.add('show');
+      }
+    });
+  }
+  wireForm('heroForm','heroStatus');
+  wireForm('finalForm','finalStatus');
+</script>
+
+</body>
+</html>
